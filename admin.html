@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Control de invitados | Pamela &amp; Luis</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__mark" id="marca" aria-hidden="true"></span>
+      <div>
+        <p class="topbar__names">Pamela &amp; Luis</p>
+        <p class="topbar__sub">Control de invitados</p>
+      </div>
+    </div>
+    <div class="topbar__right">
+      <span class="demo-badge" id="demo-badge" hidden>Modo demo</span>
+      <a class="btn btn--quiet" href="./" target="_blank" rel="noopener">Ver invitación</a>
+      <button class="btn btn--quiet" type="button" id="btn-salir" hidden></button>
+    </div>
+  </header>
+
+  <!-- Inicio de sesión -->
+  <main class="login" id="vista-login" hidden>
+    <form class="login__card" id="form-login" novalidate>
+      <h1>Entrar al panel</h1>
+      <p class="muted">Usa el correo y la contraseña que registraste en Supabase.</p>
+      <label class="fld"><span>Correo</span><input type="email" name="email" autocomplete="username" required></label>
+      <label class="fld"><span>Contraseña</span><input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="btn btn--primary" type="submit">Entrar</button>
+      <p class="form-error" id="login-error" role="alert"></p>
+    </form>
+  </main>
+
+  <!-- Panel -->
+  <main class="panel" id="vista-panel" hidden>
+    <div class="demo-note" id="demo-note" hidden>
+      <p><strong>Estás en modo demo.</strong> Los datos de ejemplo viven solo en este navegador. Para recibir confirmaciones reales, conecta Supabase siguiendo PROYECTO.md.</p>
+      <button class="btn btn--quiet" type="button" id="btn-reset-demo">Restaurar datos de ejemplo</button>
+    </div>
+
+    <section class="summary" aria-labelledby="t-resumen">
+      <h1 id="t-resumen" class="visually-hidden">Resumen</h1>
+      <div class="summary__main">
+        <p class="summary__big"><span id="s-confirmados">0</span> <span class="summary__of">de <span id="s-boletos">0</span> boletos confirmados</span></p>
+        <div class="meter" id="meter" role="img" aria-label="">
+          <span class="meter__seg meter__seg--si" id="m-si"></span>
+          <span class="meter__seg meter__seg--no" id="m-no"></span>
+          <span class="meter__seg meter__seg--pend" id="m-pend"></span>
+        </div>
+        <ul class="legend">
+          <li><i class="dot dot--si"></i><span id="l-si">0</span> asistirán</li>
+          <li><i class="dot dot--no"></i><span id="l-no">0</span> no asistirán</li>
+          <li><i class="dot dot--pend"></i><span id="l-pend">0</span> sin responder</li>
+        </ul>
+      </div>
+      <dl class="summary__facts">
+        <div><dt>Invitaciones</dt><dd id="s-inv">0</dd></div>
+        <div><dt>Ya respondieron</dt><dd id="s-resp">0</dd></div>
+        <div><dt>Faltan por responder</dt><dd id="s-faltan">0</dd></div>
+      </dl>
+    </section>
+
+    <section class="list" aria-labelledby="t-lista">
+      <div class="list__head">
+        <h2 id="t-lista">Invitaciones</h2>
+        <div class="list__actions">
+          <button class="btn btn--ghost btn--sm" type="button" id="btn-importar"></button>
+          <button class="btn btn--ghost btn--sm" type="button" id="btn-excel"></button>
+          <button class="btn btn--primary btn--sm" type="button" id="btn-nueva"></button>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label class="search">
+          <span class="visually-hidden">Buscar por nombre</span>
+          <span id="ico-buscar" aria-hidden="true"></span>
+          <input type="search" id="buscar" placeholder="Buscar familia o invitado" autocomplete="off">
+        </label>
+        <div class="segmented" role="radiogroup" aria-label="Filtrar por estado" id="filtros">
+          <button type="button" role="radio" aria-checked="true" data-f="todas">Todas <span data-c="todas"></span></button>
+          <button type="button" role="radio" aria-checked="false" data-f="asiste">Asistirán <span data-c="asiste"></span></button>
+          <button type="button" role="radio" aria-checked="false" data-f="no_asiste">No asistirán <span data-c="no_asiste"></span></button>
+          <button type="button" role="radio" aria-checked="false" data-f="pendiente">Sin responder <span data-c="pendiente"></span></button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="tabla">
+          <thead>
+            <tr>
+              <th scope="col">Familia o invitado</th>
+              <th scope="col" class="num">Boletos</th>
+              <th scope="col">Respuesta</th>
+              <th scope="col">Mensaje</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="filas"></tbody>
+        </table>
+        <div class="empty" id="vacio" hidden></div>
+      </div>
+    </section>
+
+    <section class="messages" aria-labelledby="t-mensajes">
+      <h2 id="t-mensajes">Mensajes para ustedes</h2>
+      <div id="mensajes" class="messages__grid"></div>
+    </section>
+  </main>
+
+  <!-- Diálogo: crear / editar invitación -->
+  <dialog class="dlg" id="dlg-inv" aria-labelledby="dlg-inv-t">
+    <form method="dialog" id="form-inv" novalidate>
+      <h2 id="dlg-inv-t">Nueva invitación</h2>
+      <label class="fld">
+        <span>Nombre de la familia o invitado</span>
+        <input name="nombre" required maxlength="120" placeholder="Ej. Familia Hernández Ruiz" autocomplete="off">
+        <small class="fld__err" data-err="nombre"></small>
+      </label>
+      <div class="fld-row">
+        <label class="fld">
+          <span>Boletos</span>
+          <input name="boletos" type="number" inputmode="numeric" min="1" max="30" value="2" required>
+          <small class="fld__err" data-err="boletos"></small>
+        </label>
+        <label class="fld">
+          <span>WhatsApp <em>(opcional)</em></span>
+          <input name="telefono" type="tel" inputmode="tel" placeholder="10 dígitos" autocomplete="off">
+        </label>
+      </div>
+      <fieldset class="fld-group" id="grupo-respuesta" hidden>
+        <legend>Respuesta</legend>
+        <p class="muted small">Úsalo si alguien te confirma por teléfono o en persona.</p>
+        <div class="fld-row">
+          <label class="fld">
+            <span>Estado</span>
+            <select name="estado">
+              <option value="pendiente">Sin responder</option>
+              <option value="asiste">Asistirán</option>
+              <option value="no_asiste">No asistirán</option>
+            </select>
+          </label>
+          <label class="fld" id="fld-confirmados">
+            <span>Boletos confirmados</span>
+            <input name="boletos_confirmados" type="number" inputmode="numeric" min="1" max="30">
+          </label>
+        </div>
+      </fieldset>
+      <label class="fld">
+        <span>Notas internas <em>(solo ustedes las ven)</em></span>
+        <textarea name="notas" rows="2" maxlength="500" placeholder="Ej. mesa 4, amigos de la universidad"></textarea>
+      </label>
+      <p class="form-error" id="inv-error" role="alert"></p>
+      <div class="dlg__actions">
+        <button class="btn btn--quiet" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary" type="submit" id="inv-guardar">Crear invitación</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Diálogo: eliminar -->
+  <dialog class="dlg dlg--sm" id="dlg-del" aria-labelledby="dlg-del-t">
+    <form method="dialog">
+      <h2 id="dlg-del-t">¿Eliminar invitación?</h2>
+      <p id="del-texto"></p>
+      <div class="dlg__actions">
+        <button class="btn btn--quiet" type="button" data-close>Cancelar</button>
+        <button class="btn btn--danger" type="button" id="del-ok">Eliminar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Diálogo: importar -->
+  <dialog class="dlg" id="dlg-imp" aria-labelledby="dlg-imp-t">
+    <form method="dialog" id="form-imp">
+      <h2 id="dlg-imp-t">Importar lista de invitados</h2>
+      <p>Sube un archivo de Excel (.xlsx) o CSV con estas columnas en la primera fila:</p>
+      <p class="code-cols"><code>nombre</code> <code>boletos</code> <code>telefono</code></p>
+      <p class="muted small">El teléfono es opcional. Cada fila crea una invitación con su propio enlace. <button class="linklike" type="button" id="btn-plantilla">Descargar plantilla</button></p>
+      <label class="dropzone">
+        <input type="file" id="archivo" accept=".xlsx,.xls,.csv">
+        <span id="dz-texto">Elegir archivo</span>
+      </label>
+      <div id="imp-preview" class="imp-preview" hidden></div>
+      <p class="form-error" id="imp-error" role="alert"></p>
+      <div class="dlg__actions">
+        <button class="btn btn--quiet" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary" type="button" id="imp-ok" disabled>Importar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

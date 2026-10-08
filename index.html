@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pamela &amp; Luis | 17 de abril de 2027</title>
+  <meta name="description" content="Invitación a la boda de Pamela y Luis, sábado 17 de abril de 2027 en Texcoco, Estado de México. Confirma tu asistencia aquí.">
+  <meta name="theme-color" content="#F6F7F0">
+  <meta name="color-scheme" content="light">
+
+  <!-- Vista previa al compartir por WhatsApp. Después de publicar, cambia
+       la URL de og:image por la dirección completa de tu sitio. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pamela &amp; Luis">
+  <meta property="og:description" content="Sábado 17 de abril de 2027, Texcoco. Abre tu invitación y confirma tu asistencia.">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/ms-madi-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jost-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <script>document.documentElement.classList.add('js')</script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#confirmar">Ir a confirmar asistencia</a>
+
+  <div class="tarjeta">
+    <header class="hero" id="inicio">
+      <p class="hero__to" id="destinatario" hidden>
+        <span>Con cariño para</span>
+        <strong id="destinatario-nombre"></strong>
+      </p>
+
+      <div class="hero__crest">
+        <div class="hero__couple" id="novios"></div>
+        <h1 class="names">
+          <span class="names__line" data-bind="novia">Pamela</span>
+          <span class="names__amp" aria-label="y">&amp;</span>
+          <span class="names__line" data-bind="novio">Luis</span>
+        </h1>
+      </div>
+
+      <p class="hero__headline">¡Nos casamos!</p>
+
+      <p class="hero__when">
+        <time data-bind="fechaTexto" datetime="2027-04-17T14:00-06:00">Sábado 17 de abril de 2027</time>
+        <span data-bind="ciudad">Texcoco, Estado de México</span>
+      </p>
+
+      <p class="hero__quote" data-bind="frases.apertura">Dos vidas, un mismo camino; dos historias, un mismo comienzo.</p>
+
+      <a class="btn btn--primary hero__cta" href="#confirmar">Confirmar asistencia</a>
+    </header>
+
+    <main>
+      <section class="countdown" aria-labelledby="t-faltan" data-reveal>
+        <div class="countdown__frame">
+          <div class="countdown__border" id="marco"></div>
+          <h2 id="t-faltan" class="script-title">Nos vemos en</h2>
+          <div class="countdown__grid" id="cuenta" role="timer" aria-live="off">
+            <div class="countdown__unit"><span class="countdown__num" data-u="d">000</span><span class="countdown__label">días</span></div>
+            <div class="countdown__unit"><span class="countdown__num" data-u="h">00</span><span class="countdown__label">horas</span></div>
+            <div class="countdown__unit"><span class="countdown__num" data-u="m">00</span><span class="countdown__label">minutos</span></div>
+            <div class="countdown__unit"><span class="countdown__num" data-u="s">00</span><span class="countdown__label">segundos</span></div>
+          </div>
+          <p class="countdown__done" id="cuenta-fin" hidden></p>
+        </div>
+      </section>
+
+      <section class="events" id="lugar" aria-labelledby="t-lugar">
+        <h2 id="t-lugar" class="script-title">Dónde y cuándo</h2>
+        <article class="event" id="ev-ceremonia"></article>
+        <div class="sprig" id="ramita-eventos" aria-hidden="true"></div>
+        <article class="event" id="ev-recepcion"></article>
+        <button class="btn btn--ghost events__cal" type="button" id="btn-calendario"></button>
+      </section>
+
+      <section class="day" id="itinerario" aria-labelledby="t-dia">
+        <h2 id="t-dia" class="script-title">Programa del día</h2>
+        <ol class="timeline" id="lista-itinerario"></ol>
+      </section>
+
+      <section class="gifts" id="regalos" aria-labelledby="t-regalos">
+        <h2 id="t-regalos" class="script-title">Mesa de regalos</h2>
+        <p class="gifts__intro">Tu presencia es nuestro mejor regalo. Si además quieres tener un detalle con nosotros, aquí tienes algunas opciones.</p>
+        <ul class="gifts__list" id="lista-regalos"></ul>
+      </section>
+
+      <section class="rsvp" id="confirmar" aria-labelledby="t-confirmar" tabindex="-1">
+        <div class="rsvp__art" id="arte-sobre" aria-hidden="true"></div>
+        <h2 id="t-confirmar" class="script-title">Confirma tu asistencia</h2>
+        <div id="rsvp" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="closing">
+      <div class="closing__art" id="arte-cierre" aria-hidden="true"></div>
+      <p class="closing__quote" data-bind="frases.cierre">Gracias por ser parte de esta nueva etapa. Nos vemos muy pronto.</p>
+      <p class="closing__sign">
+        <span data-bind="frases.firma">Con todo nuestro cariño</span>
+        <span class="closing__names"><span data-bind="novia">Pamela</span> &amp; <span data-bind="novio">Luis</span></span>
+      </p>
+    </footer>
+  </div>
+
+  <noscript>
+    <p class="noscript">Para ver tu invitación completa y confirmar tu asistencia, activa JavaScript en tu navegador.</p>
+  </noscript>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+/* =====================================================================
+   Invitación: Pamela & Luis (verde, minimalista, ilustraciones de línea)
+   ===================================================================== */
+
+/* La invitación es una tira de papel: a lo ancho de la pantalla en el
+   celular, y como tarjeta sobre la mesa en pantallas grandes. */
+.tarjeta {
+  max-width: 36rem;
+  margin: 0 auto;
+  background: var(--papel);
+  overflow: hidden;
+}
+@media (min-width: 760px) {
+  body { background: var(--mesa); }
+  .tarjeta {
+    margin: 2.5rem auto 3rem;
+    border-radius: 6px;
+    box-shadow: var(--sombra);
+  }
+}
+
+main { display: block; }
+
+.art { color: var(--trazo); width: 100%; height: auto; }
+
+.script-title {
+  font-family: var(--f-script);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 2.1rem + 2.4vw, 3.3rem);
+  line-height: 1.05;
+  color: var(--acento);
+  text-align: center;
+  margin: 0 0 1.75rem;
+  text-wrap: balance;
+}
+
+section { padding: clamp(3.5rem, 2.75rem + 3vw, 5rem) 1.5rem; text-align: center; }
+
+/* ---------- Encabezado ---------- */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.1rem;
+  padding: 3rem 1.5rem 3.5rem;
+  text-align: center;
+}
+@media (min-width: 760px) { .hero { min-height: min(100svh, 940px); } }
+
+.hero__to { margin: 0; display: grid; gap: .1rem; color: var(--tinta-suave); font-size: 1.05rem; }
+.hero__to strong { color: var(--tinta); font-weight: 400; font-size: 1.25rem; line-height: 1.3; text-wrap: balance; }
+
+.hero__crest {
+  position: relative;
+  width: min(84vw, 330px);
+  aspect-ratio: 300 / 390;
+}
+.hero__couple { position: absolute; inset: 0; }
+.hero__couple .art { width: 100%; height: 100%; }
+.art--novios .relleno { fill: var(--acento); stroke: var(--acento); fill-opacity: 1; }
+.art--novios .mano { fill: var(--papel); }
+@media (prefers-reduced-motion: no-preference) {
+  .js .art--novios .relleno { fill-opacity: 0; transition: fill-opacity 600ms ease; }
+  .js .art--novios.is-drawn .relleno { fill-opacity: 1; }
+}
+
+/* Los nombres van dentro del corazón (su centro óptico está al 39% de alto) */
+.names {
+  position: absolute;
+  left: 50%; top: 39%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  margin: 0;
+  display: grid; justify-items: center;
+  font-family: var(--f-script); font-weight: 400;
+  color: var(--acento);
+  line-height: .95;
+}
+.names__line { font-size: min(13.5vw, 3.6rem); padding: 0 .15em .08em; white-space: nowrap; }
+.names__amp { font-size: min(8vw, 2.1rem); color: var(--trazo); margin: -.1em 0 0; }
+
+.hero__headline {
+  margin: .25rem 0 0;
+  font-family: var(--f-script);
+  font-size: clamp(2.3rem, 2rem + 1.5vw, 2.8rem);
+  line-height: 1.1;
+  color: var(--acento);
+}
+
+.hero__when { margin: 0; display: grid; gap: .1rem; font-size: 1.15rem; }
+.hero__when time { font-weight: 400; }
+.hero__when span { color: var(--tinta-suave); }
+
+.hero__quote {
+  margin: .5rem 0 .75rem;
+  max-width: 26ch;
+  color: var(--tinta-suave);
+  font-size: 1.1rem;
+  line-height: 1.55;
+  text-wrap: balance;
+}
+.hero__quote::before { content: '\201C'; }
+.hero__quote::after { content: '\201D'; }
+
+/* Secuencia de entrada del encabezado: la corona se dibuja, los nombres
+   se "escriben" de izquierda a derecha y el resto aparece al final. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .names__line, .js .names__amp {
+    clip-path: inset(-10% 100% -20% 0);
+    animation: escribir 1100ms cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  }
+  .js .names__line:nth-child(1) { animation-delay: 1100ms; }
+  .js .names__amp { animation-delay: 1900ms; animation-duration: 500ms; }
+  .js .names__line:nth-child(3) { animation-delay: 2200ms; animation-duration: 800ms; }
+
+  .js .hero__to, .js .hero__headline, .js .hero__when, .js .hero__quote, .js .hero__cta {
+    opacity: 0;
+    animation: aparecer 700ms var(--ease-out) forwards;
+  }
+  .js .hero__to { animation-delay: 200ms; }
+  .js .hero__headline { animation-delay: 2700ms; }
+  .js .hero__when { animation-delay: 2850ms; }
+  .js .hero__quote { animation-delay: 2970ms; }
+  .js .hero__cta { animation-delay: 3090ms; }
+}
+@keyframes escribir { to { clip-path: inset(-10% -5% -20% 0); } }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Cuenta regresiva ---------- */
+.countdown { padding-top: 1rem; }
+.countdown__frame {
+  position: relative;
+  max-width: 24rem; margin: 0 auto;
+  padding: 2.25rem 1.25rem 2rem;
+}
+.countdown__border { position: absolute; inset: 0; pointer-events: none; }
+.countdown__border .art { width: 100%; height: 100%; }
+.countdown .script-title { font-size: clamp(2.2rem, 2rem + 1vw, 2.6rem); margin-bottom: .9rem; }
+.countdown__grid { display: flex; justify-content: center; gap: clamp(.9rem, .5rem + 2vw, 1.6rem); }
+.countdown__unit { display: grid; justify-items: center; min-width: 3ch; }
+.countdown__num {
+  font-weight: 300;
+  font-size: clamp(2.2rem, 1.8rem + 2vw, 2.75rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta);
+}
+.countdown__label { margin-top: .35rem; color: var(--tinta-suave); font-size: .95rem; }
+.countdown__done { font-family: var(--f-script); font-size: 2.6rem; color: var(--acento); margin: 0; line-height: 1.1; }
+
+/* ---------- Dónde y cuándo ---------- */
+.event { display: grid; justify-items: center; gap: .2rem; }
+.event__art { width: 120px; margin-bottom: .5rem; }
+.event h3 { margin: 0; font-family: var(--f-script); font-weight: 400; font-size: 2.3rem; line-height: 1.1; color: var(--acento); }
+.event__time { margin: .25rem 0 .35rem; font-size: 1.6rem; font-weight: 300; letter-spacing: .02em; }
+.event__place { margin: 0; font-size: 1.15rem; font-weight: 400; max-width: 22ch; line-height: 1.4; text-wrap: balance; }
+.event__zone { margin: 0 0 1.1rem; color: var(--tinta-suave); }
+.event .btn { min-height: 2.75rem; padding: .5rem 1.4rem; font-size: 1rem; }
+
+.sprig { width: 150px; margin: 2.25rem auto; }
+.events__cal { margin-top: 2.75rem; }
+
+/* ---------- Programa del día ---------- */
+.timeline {
+  list-style: none; margin: 0 auto; padding: 0;
+  max-width: 24rem;
+  text-align: left;
+}
+.timeline li {
+  display: grid;
+  grid-template-columns: 76px 34px 1fr;
+  align-items: center;
+  min-height: 96px;
+  position: relative;
+}
+.timeline li::before {
+  content: '';
+  position: absolute; left: calc(76px + 17px - .75px); top: 0; bottom: 0;
+  width: 1.5px; background: var(--trazo);
+  transform-origin: top; transform: scaleY(1);
+}
+.timeline li:first-child::before { top: 50%; }
+.timeline li:last-child::before { bottom: 50%; }
+.timeline__art { width: 64px; justify-self: center; }
+.timeline__heart {
+  position: relative; z-index: 1;
+  width: 14px; height: 14px; justify-self: center;
+  color: var(--acento);
+  background: var(--papel);
+  box-shadow: 0 0 0 5px var(--papel);
+  border-radius: 50%;
+}
+.timeline__text { padding-left: .5rem; }
+.timeline__time { display: block; font-weight: 500; color: var(--acento); font-size: 1.1rem; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+.timeline__what { display: block; font-size: 1.05rem; line-height: 1.35; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .timeline li::before { transform: scaleY(0); transition: transform 700ms var(--ease-in-out); }
+  .js .timeline li.is-in::before { transform: scaleY(1); }
+  .js .timeline__heart { transform: scale(.4); opacity: 0; transition: transform 420ms cubic-bezier(.34, 1.56, .64, 1) 350ms, opacity 200ms ease 350ms; }
+  .js .timeline li.is-in .timeline__heart { transform: scale(1); opacity: 1; }
+}
+
+/* ---------- Regalos ---------- */
+.gifts__intro { max-width: 28rem; margin: -.5rem auto 2.5rem; color: var(--tinta-suave); text-wrap: pretty; }
+.gifts__list { list-style: none; padding: 0; margin: 0 auto; max-width: 26rem; display: grid; gap: 1.75rem; }
+.gift {
+  display: grid; grid-template-columns: 104px 1fr; gap: 1.25rem; align-items: center; text-align: left;
+}
+.gift:nth-child(even) { grid-template-columns: 1fr 104px; text-align: right; }
+.gift:nth-child(even) .gift__art { order: 2; }
+.gift__art { width: 104px; }
+.gift__name { margin: 0; font-family: var(--f-script); font-size: 2.3rem; line-height: 1; color: var(--acento); }
+.gift__detail { margin: .2rem 0 0; color: var(--tinta-suave); line-height: 1.45; }
+.gift__link { display: inline-block; margin-top: .4rem; font-weight: 400; }
+.gift__pending { display: inline-block; margin-top: .35rem; font-size: .95rem; color: var(--tinta-suave); background: var(--salvia-clara); border-radius: var(--r-pill); padding: .1rem .7rem; }
+
+/* ---------- Confirmación ---------- */
+.rsvp { background: var(--niebla); padding-bottom: clamp(3.5rem, 3rem + 3vw, 4.5rem); }
+.rsvp:focus { outline: none; }
+.rsvp__art { width: 120px; margin: 0 auto .5rem; }
+.rsvp .script-title { margin-bottom: 1.25rem; }
+
+.rsvp__lead { margin: 0 auto 2rem; max-width: 26rem; display: grid; justify-items: center; gap: .6rem; }
+.rsvp__family { font-size: 1.35rem; font-weight: 400; line-height: 1.3; text-wrap: balance; }
+.rsvp__tickets {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .45rem 1.1rem;
+  background: var(--blanco); border-radius: var(--r-pill);
+  font-size: 1.05rem;
+}
+.rsvp__tickets strong { color: var(--acento); }
+.rsvp__tickets .icon { color: var(--trazo); }
+
+.rsvp form { display: grid; gap: 1.9rem; max-width: 24rem; margin: 0 auto; text-align: left; }
+.field { display: grid; gap: .55rem; border: 0; padding: 0; margin: 0; min-width: 0; }
+.field > legend, .field > label { font-weight: 400; font-size: 1.1rem; padding: 0; margin-bottom: .4rem; }
+.field > label { margin-bottom: 0; }
+.field__help { font-size: .95rem; color: var(--tinta-suave); margin: 0; }
+.field__opt { color: var(--tinta-suave); }
+
+/* Opciones Sí / No con círculo */
+.choice { display: grid; gap: .25rem; }
+.choice input { position: absolute; opacity: 0; pointer-events: none; }
+.choice label {
+  display: flex; align-items: center; gap: .85rem;
+  min-height: 3rem; padding: .35rem .25rem;
+  cursor: pointer; font-size: 1.1rem; line-height: 1.3;
+  border-radius: 10px;
+}
+.choice label::before {
+  content: ''; flex: none;
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  border: 1.5px solid var(--trazo);
+  background: var(--blanco) radial-gradient(circle, var(--acento) 0 45%, transparent 47%) center / 0 0 no-repeat;
+  transition: background-size 220ms var(--ease-out), border-color 160ms ease;
+}
+.choice input:checked + label::before { background-size: 100% 100%; border-color: var(--acento); }
+.choice label:active::before { transform: scale(.94); }
+.choice input:focus-visible + label { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+.count { display: grid; justify-items: center; gap: .5rem; text-align: center; transition: opacity 240ms ease, transform 240ms var(--ease-out); }
+@starting-style { .count { opacity: 0; transform: translateY(-6px); } }
+.stepper { display: flex; align-items: center; gap: 1.1rem; }
+.stepper button {
+  width: 3.1rem; height: 3.1rem; border-radius: 50%;
+  border: 1.5px solid var(--linea-fuerte); background: var(--blanco); color: var(--acento);
+  display: grid; place-items: center; cursor: pointer;
+  transition: transform 160ms var(--ease-out), border-color 180ms ease;
+}
+@media (hover: hover) and (pointer: fine) { .stepper button:hover:not(:disabled) { border-color: var(--acento); } }
+.stepper button:active:not(:disabled) { transform: scale(0.94); }
+.stepper button:disabled { color: var(--linea-fuerte); cursor: not-allowed; }
+.stepper output { min-width: 2.5ch; text-align: center; font-weight: 300; font-size: 2.8rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.count__of { color: var(--tinta-suave); margin: 0; }
+
+textarea {
+  width: 100%; min-height: 6.5rem; resize: vertical;
+  font: inherit; font-size: 1.05rem; color: var(--tinta);
+  background: var(--blanco);
+  border: 1.5px solid var(--linea); border-radius: var(--r-campo);
+  padding: .8rem 1rem;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+textarea:hover { border-color: var(--linea-fuerte); }
+textarea:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px rgba(79, 93, 47, .14); }
+textarea::placeholder { color: #7A806F; }
+.field__counter { justify-self: end; font-size: .9rem; color: var(--tinta-suave); margin: 0; font-variant-numeric: tabular-nums; }
+
+.rsvp .btn--primary { width: 100%; }
+.form-error { margin: -.9rem 0 0; color: var(--error); text-align: center; font-size: 1rem; font-weight: 400; }
+.form-error:empty { display: none; }
+
+/* Estados */
+.rsvp__state { display: grid; justify-items: center; gap: .9rem; }
+.rsvp__state p { margin: 0; max-width: 26rem; text-wrap: pretty; }
+.rsvp__state .big { font-family: var(--f-script); font-size: clamp(2.3rem, 2rem + 1.5vw, 2.8rem); line-height: 1.1; color: var(--acento); text-wrap: balance; }
+.rsvp__state .big:focus { outline: none; }
+.rsvp__state .quote { font-style: normal; color: var(--tinta-suave); }
+.rsvp__state .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .5rem; }
+.rsvp__state .seal { width: 84px; }
+
+.skeleton { display: grid; gap: .9rem; justify-items: center; max-width: 24rem; margin: 0 auto; }
+.skeleton span { display: block; height: 1.1rem; border-radius: 8px; background: linear-gradient(90deg, var(--salvia-clara), var(--blanco) 50%, var(--salvia-clara)); background-size: 200% 100%; animation: brillo 1.2s linear infinite; }
+@keyframes brillo { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton span { animation: none; } }
+
+/* ---------- Cierre ---------- */
+.closing { text-align: center; padding: clamp(3.5rem, 3rem + 3vw, 5rem) 1.5rem calc(3.5rem + env(safe-area-inset-bottom)); }
+.closing__art { width: 130px; margin: 0 auto 1.25rem; }
+.closing__quote { max-width: 24ch; margin: 0 auto 1.75rem; font-size: 1.2rem; line-height: 1.5; text-wrap: balance; }
+.closing__sign { margin: 0; display: grid; gap: .1rem; color: var(--tinta-suave); }
+.closing__names { font-family: var(--f-script); font-size: 2.6rem; line-height: 1.2; color: var(--acento); }
+
+.noscript { text-align: center; padding: 2rem; }
+
+/* Celebración al confirmar */
+.confeti { position: fixed; inset: 0; pointer-events: none; z-index: 40; overflow: hidden; }
+.confeti__p { position: absolute; width: 16px; height: 18px; will-change: transform, opacity; }
+.confeti__p svg { width: 100%; height: 100%; }
